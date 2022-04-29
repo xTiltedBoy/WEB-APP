@@ -5,12 +5,15 @@
 <!DOCTYPE html>
 <html><meta charset="UTF-8">
     <head>
-        <title>Categorías</title>
-    <p>Usuario: <!-- poner correo del usuario --> <a href='categorias.php'>Home</a> <a href='carrito.php'>Ver carrito</a> <a href='logout.php'>Cerrar sesión</a></p>
-        <hr>
-        <h1>Lista de categorías</h1>
+        
     </head>
     <body>
+        <header>
+            <title>Categorías</title>
+            <p>Usuario: <!-- poner correo del usuario --> <a href='categorias.php'>Home</a> <a href='carrito.php'>Ver carrito</a> <a href='logout.php'>Cerrar sesión</a></p>
+            <hr> 
+            <h1>Lista de categorías</h1>
+        </header>
         <?php
             //Guardamos una varible con la tabla familia
             $sql= "SELECT * from categoria";

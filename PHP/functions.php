@@ -6,8 +6,6 @@
 
 function conexion_db($hostname, $user_db, $password, $name_db){
 
-    
-    
     $conexion = new mysqli($hostname,$user_db,$password,$name_db);
     
     echo "Se esta realizando la conexión";
@@ -22,8 +20,6 @@ function conexion_db($hostname, $user_db, $password, $name_db){
         
     }
     else{
-        
-        echo "La conexión se ha realizado correctamente";
         
         return $conexion;
         
@@ -42,9 +38,7 @@ function query_db($query, $conexion){
 }
 
 function insertar_pedido(){
-    // Abrir conexión con la base de datos (funcion por hacer)
-   
-    
+    // Abrir conexión con la base de datos (funcion por hacer) 
     // Insert con los datos del pedido a la base de datos
     // Tanto a la tabla pedidos como a la tabla pedidosproductos
     
