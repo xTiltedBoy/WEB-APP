@@ -8,8 +8,6 @@ function conexion_db($hostname, $user_db, $password, $name_db){
 
     $conexion = new mysqli($hostname,$user_db,$password,$name_db);
     
-    echo "Se esta realizando la conexión";
-    
     $error = $conexion->errno;
   
     if ($error != 0){
@@ -37,12 +35,25 @@ function query_db($query, $conexion){
     
 }
 
-function insertar_pedido(){
+function insertar_pedido($conexion){
     // Abrir conexión con la base de datos (funcion por hacer) 
     // Insert con los datos del pedido a la base de datos
     // Tanto a la tabla pedidos como a la tabla pedidosproductos
     
+    $usuario = $_SESSION['usuario'];
+    $carrito = $_SESSION['carrito'];
     
+    $insert = 'INSERT INTO pedidos (Fecha, Enviado, Restaurante) VALUES ('.date("YYYY-mm-dd").', 0, '.$usuario.')';
+    
+    foreach ($carrito as $CodPed => $Unidades){
+        
+        echo "$CodPed => $Unidades<br>";
+        
+        $insert='INSERT INTO pedidosproductos (CodPed, CodProd, Unidades)';
+            
+            $resultado = $conexion->query($insert);
+        
+    }
     
 }
     
