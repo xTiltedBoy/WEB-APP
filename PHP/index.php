@@ -2,6 +2,6 @@
 
 include "functions.php";
 
-conexion_db("localhost", "root", "", "pedido");
+conexion_db("localhost", "root", "", "pedidos");
 insertar_pedido();
 

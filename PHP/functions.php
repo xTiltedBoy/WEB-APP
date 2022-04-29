@@ -14,7 +14,7 @@ function conexion_db($hostname, $user_db, $password, $name_db){
     
     $error = $conexion->errno;
   
-    if ($error != null){
+    if ($error != 0){
         
         echo "Error $error $conexion->error";
         
@@ -25,12 +25,9 @@ function conexion_db($hostname, $user_db, $password, $name_db){
         
         echo "La conexión se ha realizado correctamente";
         
-        
+        return $conexion;
         
     }
-        echo "La conexión se ha realizado correctamente";
-
-        return $conexion;
 }
 
 // Esta función va a ejecutar una sentencia SQL y se le tiene que 
@@ -46,8 +43,7 @@ function query_db($query, $conexion){
 
 function insertar_pedido(){
     // Abrir conexión con la base de datos (funcion por hacer)
-    
-    conexion_db("localhost", "root", "", "pedido");
+   
     
     // Insert con los datos del pedido a la base de datos
     // Tanto a la tabla pedidos como a la tabla pedidosproductos

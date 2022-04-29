@@ -1,7 +1,7 @@
 <?php
     $conexion = new mysqli('localhost', 'root', '', 'pedidos');
-    if(isset($_GET['productos'])){
-        $familia=$_GET['productos'];
+    if(isset($_GET['categoria'])){
+        $familia=$_GET['categoria'];
     }  
 ?>
 <!DOCTYPE html>
@@ -14,7 +14,7 @@
         <p>Platos e ingredientes</p>
         <?php
             //Guardamos una varible con la tabla producto
-            $sql= "SELECT * from producto where CodCat='$familia'";
+            $sql= "SELECT * from productos where CodCat='$familia'";
             
             //Guardamos en una varible una consulta a la tabla producto
             $resultado=$conexion->query($sql);
@@ -31,7 +31,7 @@
                 <td><?php echo $filas['Descripcion']?></td>
                 <td><?php echo $filas['Peso']?></td>
                 <td><?php echo $filas['Stock']?></td>
-                <td><?php echo $filas['Comprar']?></td>
+                <!--<td><?php echo $filas['Comprar']?></td>-->
                 <td>
                     <form>
                         <input type='number' name='numero'>
