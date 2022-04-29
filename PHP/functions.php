@@ -45,9 +45,9 @@ function insertar_pedido($conexion){
     
     $insert = 'INSERT INTO pedidos (Fecha, Enviado, Restaurante) VALUES ('.date("YYYY-mm-dd").', 0, '.$usuario.')';
     
-    foreach ($carrito as $CodPed => $Unidades){
+    foreach ($carrito as $CodProd => $Unidades){
         
-        echo "$CodPed => $Unidades<br>";
+        echo "$CodProd => $Unidades<br>";
         
         $insert='INSERT INTO pedidosproductos (CodPed, CodProd, Unidades)';
             
