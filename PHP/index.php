@@ -2,7 +2,7 @@
 
 include "functions.php";
 
-conexion_db("localhost", "root", "", "pedidos");
+$conexion = conexion_db("localhost", "root", "", "pedidos");
 
 $_SESSION['usuario'] = 1;
 
@@ -12,5 +12,17 @@ $_SESSION['carrito'] = [
     "2" => "6"
 ];
 
-insertar_pedido();
+$resultado = insertar_pedido($conexion);
+
+if ($resultado === true){
+    
+    echo "Se ha realizado con exito";
+    
+}
+else{
+    
+    echo $resultado;
+    
+}
+
 

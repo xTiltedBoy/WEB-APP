@@ -10,7 +10,7 @@ function conexion_db($hostname, $user_db, $password, $name_db){
     
     $error = $conexion->errno;
   
-    if ($error != 0){
+    if ($error != null){
         
         echo "Error $error $conexion->error";
         
@@ -31,27 +31,70 @@ function conexion_db($hostname, $user_db, $password, $name_db){
 
 function query_db($query, $conexion){
     
-    return $conexion->query($query);
+    $resultado = $conexion->query($query);
+    
+    $error = $conexion->errno;
+    
+    if ($error != null){
+        
+        return $error;
+        
+    }
+    else{
+        
+        return $resultado;
+        
+    }
     
 }
 
 function insertar_pedido($conexion){
-    // Abrir conexión con la base de datos (funcion por hacer) 
-    // Insert con los datos del pedido a la base de datos
-    // Tanto a la tabla pedidos como a la tabla pedidosproductos
+    
+    // Inicializamos las variables
     
     $usuario = $_SESSION['usuario'];
     $carrito = $_SESSION['carrito'];
+
+    // Hacemos una SELECT para ver cual fue el último CodPed y sumarlo en 1
     
-    $insert = 'INSERT INTO pedidos (Fecha, Enviado, Restaurante) VALUES ('.date("YYYY-mm-dd").', 0, '.$usuario.')';
+    $SELECT = "SELECT MAX(CodPed) + 1 FROM pedidos";
+    
+    $CodPed = query_db($SELECT, $conexion);
+    $CodPed = $CodPed->fetch_array();
+    $CodPed = $CodPed[0];
+    
+    // Hacemos un INSERT con el pedido a la tabla pedidos
+    
+    $Date = date("Y-m-d H:i:s");
+    
+    $INSERT = "INSERT INTO pedidos (CodPed, Fecha, Enviado, Restaurante) VALUES ($CodPed, '$Date', 0, $usuario)";
+    query_db($INSERT, $conexion);
     
     foreach ($carrito as $CodProd => $Unidades){
         
-        echo "$CodProd => $Unidades<br>";
+        $INSERT="INSERT INTO pedidosproductos (CodPed, CodProd, Unidades) VALUES ($CodPed, $CodProd, $Unidades)";
+        $resultado = query_db($INSERT, $conexion);
         
-        $insert='INSERT INTO pedidosproductos (CodPed, CodProd, Unidades)';
+        
+        $contador = 0;
+        
+        if (is_int($resultado) === true){
             
-            $resultado = $conexion->query($insert);
+            $contador += 1;
+            $codigo_error = $resultado;
+            
+        }
+       
+    }
+    
+    if ($contador > 0){
+        
+        return $codigo_error;
+        
+    }
+    else{
+        
+        return true;
         
     }
     
