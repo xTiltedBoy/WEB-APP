@@ -10,8 +10,19 @@
         <title>Comida</title>
     </head>
     <body>
-        <h1>Comida</h1>
-        <p>Platos e ingredientes</p>
+        <?php
+        if ($familia == 1){
+            echo '<h1>Comida</h1>';
+            echo '<p>Productos y descripción</p>';
+        } elseif ($familia == 2){
+            echo '<h1>Bebidas sin</h1>';
+            echo '<p>Bebidas y descripción</p>';
+        } elseif ($familia == 3){
+            echo '<h1>Bebidas con</h1>';
+            echo '<p>Bebidas y descripción</p>';
+        }
+        ?>
+        
         <?php
             //Guardamos una varible con la tabla producto
             $sql= "SELECT * from productos where CodCat='$familia'";
@@ -31,9 +42,11 @@
                 <td><?php echo $filas['Descripcion']?></td>
                 <td><?php echo $filas['Peso']?></td>
                 <td><?php echo $filas['Stock']?></td>
-                <!--<td><?php echo $filas['Comprar']?></td>-->
+                <?php echo $filas['Comprar']?>
+                
+                <!-- La variable que lleva el número que ha seleccionado el cliente es 'numero' -->
                 <td>
-                    <form>
+                    <form method='POST' action='añadir.php'>
                         <input type='number' name='numero'>
                         <input type='submit' value='Comprar'>
                     </form>
