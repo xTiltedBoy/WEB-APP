@@ -1,5 +1,9 @@
 <?php
-    $conexion = new mysqli('localhost', 'root', '', 'pedidos');
+include ('functions.php');
+// Esta función va a abrir una conexión a la base de datos y 
+// te va a devolver la variable donde se guarda la conexión
+// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
+conexion_db();
 ?>
 
 <!DOCTYPE html>
