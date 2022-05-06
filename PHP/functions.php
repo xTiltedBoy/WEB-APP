@@ -4,8 +4,11 @@
 // te va a devolver la variable donde se guarda la conexión
 // Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
 
-function conexion_db($hostname, $user_db, $password, $name_db){
-
+function conexion_db(){
+$hostname='localhost';
+$user_db='root'; 
+$password='';
+$name_db='pedidos';
     $conexion = new mysqli($hostname,$user_db,$password,$name_db);
     
     $error = $conexion->errno;
