@@ -2,13 +2,14 @@
 
 // Esta función va a abrir una conexión a la base de datos y 
 // te va a devolver la variable donde se guarda la conexión
-// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
+// Ej: $conexion = conexion_db()
 
 function conexion_db(){
-$hostname='localhost';
-$user_db='root'; 
-$password='';
-$name_db='pedidos';
+    $hostname='localhost';
+    $user_db='root'; 
+    $password='';
+    $name_db='pedidos';
+   
     $conexion = new mysqli($hostname,$user_db,$password,$name_db);
     
     $error = $conexion->errno;
@@ -30,7 +31,7 @@ $name_db='pedidos';
 // Esta función va a ejecutar una sentencia SQL y se le tiene que 
 // pasar la sentencia que quieres ejecutar y la conexión a la base
 // de datos 
-// Ej: query_db("Sentencia a ejecutar", $conexion)
+// Ej: $resultado = query_db("Sentencia a ejecutar", $conexion)
 
 function query_db($query, $conexion){
     
@@ -38,7 +39,7 @@ function query_db($query, $conexion){
     
     $error = $conexion->errno;
     
-    if ($error != null){
+    if ($conexion->errno){
         
         return $error;
         
@@ -52,6 +53,11 @@ function query_db($query, $conexion){
 }
 
 function insertar_pedido($conexion){
+    
+    // Desabilitamos el autocommit de la base de datos
+    
+    $query = "SET AUTOCOMMIT=0";    
+    query_db($query, $conexion);
     
     // Inicializamos las variables
     
@@ -73,33 +79,47 @@ function insertar_pedido($conexion){
     $INSERT = "INSERT INTO pedidos (CodPed, Fecha, Enviado, Restaurante) VALUES ($CodPed, '$Date', 0, $usuario)";
     query_db($INSERT, $conexion);
     
+    // Hacemos los INSERT con los productos y unidades en la tabla pedidosproductos
+    
     foreach ($carrito as $CodProd => $Unidades){
         
         $INSERT="INSERT INTO pedidosproductos (CodPed, CodProd, Unidades) VALUES ($CodPed, $CodProd, $Unidades)";
         $resultado = query_db($INSERT, $conexion);
         
-        
-        $contador = 0;
+        $error = false;
         
         if (is_int($resultado) === true){
             
-            $contador += 1;
-            $codigo_error = $resultado;
+            $error = true;
+            $codigoError += "\n$resultado";
             
         }
        
     }
     
-    if ($contador > 0){
+    // Si ha dado algun error hacemos un ROLLBACK, si no hacemos un COMMIT
+    
+    if ($error){
         
-        return $codigo_error;
+        //$ROLLBACK = "ROLLBACK";
+        //query_db($ROLLBACK, $conexion);
+        
+        return $codigoError;
         
     }
     else{
         
+        $COMMIT = "COMMIT";
+        query_db($COMMIT, $conexion);
+        
         return true;
         
     }
+    
+    // Volvemos a poner el AUTOCOMMIT
+    
+    $query = "SET AUTOCOMMIT=1";    
+    query_db($query, $conexion);
     
 }
     

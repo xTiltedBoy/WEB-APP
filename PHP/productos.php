@@ -1,5 +1,5 @@
 <?php
-    $conexion = new mysqli('localhost', 'root', '', 'pedidos');
+    $conexion = conexion_db();
     if(isset($_GET['categoria'])){
         $familia=$_GET['categoria'];
     }  
@@ -28,7 +28,7 @@
             $sql= "SELECT * from productos where CodCat='$familia'";
             
             //Guardamos en una varible una consulta a la tabla producto
-            $resultado=$conexion->query($sql);
+            $resultado = query($sql, $conexion);
             
         ?>
         <table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>

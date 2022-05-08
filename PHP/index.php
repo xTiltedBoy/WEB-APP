@@ -2,14 +2,14 @@
 
 include "functions.php";
 
-$conexion = conexion_db("localhost", "root", "", "pedidos");
+$conexion = conexion_db();
 
 $_SESSION['usuario'] = 1;
 
 $_SESSION['carrito'] = [
     "1" => "3",
     "3" => "2",
-    "2" => "6"
+    "2" => "t"
 ];
 
 $resultado = insertar_pedido($conexion);

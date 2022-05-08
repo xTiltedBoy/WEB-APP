@@ -1,9 +1,7 @@
 <?php
 include ('functions.php');
-// Esta función va a abrir una conexión a la base de datos y 
-// te va a devolver la variable donde se guarda la conexión
-// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
-conexion_db();
+
+$conexion = conexion_db();
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +21,7 @@ conexion_db();
             $sql= "SELECT * from categoria";
             
             //Guardamos en una varible una consulta a la tabla familia
-            $resultado=$conexion->query($sql);
+            $resultado = query_db($sql, $conexion);
             
             //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
             if($resultado->num_rows > 0){
