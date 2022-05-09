@@ -20,10 +20,14 @@ $conexion = conexion_db();
         </header>
         <?php
             //Guardamos una varible con la tabla familia
-            $sql= "SELECT * from categoria";
+            $query= "SELECT * from categoria";
             
-            //Guardamos en una varible una consulta a la tabla familia
-            $resultado=$conexion->query($sql);
+            // Esta función va a ejecutar una sentencia SQL y se le tiene que 
+            // pasar la sentencia que quieres ejecutar y la conexión a la base
+            // de datos 
+            // Ej: query_db("Sentencia a ejecutar", $conexion)
+
+            $resultado = query_db($query, $conexion);
             
             //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
             if($resultado->num_rows > 0){

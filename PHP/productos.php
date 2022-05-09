@@ -29,11 +29,14 @@ if(isset($_GET['categoria'])){
         ?>
         
         <?php
-            //Guardamos una varible con la tabla producto
-            $sql= "SELECT * from productos where CodCat='$familia'";
+        //Guardamos una varible con la tabla producto
+        $query= "SELECT * from productos where CodCat='$familia'";
             
-            //Guardamos en una varible una consulta a la tabla producto
-            $resultado=$conexion->query($sql);
+        // Esta función va a ejecutar una sentencia SQL y se le tiene que 
+        // pasar la sentencia que quieres ejecutar y la conexión a la base
+        // de datos 
+        // Ej: query_db("Sentencia a ejecutar", $conexion)
+        $resultado = query_db($query, $conexion);
             
         ?>
         <table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>
