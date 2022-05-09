@@ -1,8 +1,13 @@
 <?php
-    $conexion = new mysqli('localhost', 'root', '', 'pedidos');
-    if(isset($_GET['categoria'])){
+include ('functions.php');
+// Esta función va a abrir una conexión a la base de datos y 
+// te va a devolver la variable donde se guarda la conexión
+// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
+$conexion = conexion_db();
+
+if(isset($_GET['categoria'])){
         $familia=$_GET['categoria'];
-    }  
+}  
 ?>
 <!DOCTYPE html>
 <html><meta charset="UTF-8">
