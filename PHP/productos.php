@@ -1,8 +1,7 @@
 <?php
 include ('functions.php');
-// Esta función va a abrir una conexión a la base de datos y 
-// te va a devolver la variable donde se guarda la conexión
-// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
+// Esta función va a abrir una conexión a la base de datos y te va a devolver la variable donde se guarda la conexión
+
 $conexion = conexion_db();
 
 if(isset($_GET['categoria'])){
@@ -32,10 +31,7 @@ if(isset($_GET['categoria'])){
         //Guardamos una varible con la tabla producto
         $query= "SELECT * from productos where CodCat='$familia'";
             
-        // Esta función va a ejecutar una sentencia SQL y se le tiene que 
-        // pasar la sentencia que quieres ejecutar y la conexión a la base
-        // de datos 
-        // Ej: query_db("Sentencia a ejecutar", $conexion)
+        // Esta función va a ejecutar una sentencia SQL y se le tiene que pasar la sentencia que quieres ejecutar y la conexión a la base de datos
         $resultado = query_db($query, $conexion);
             
         ?>
@@ -50,7 +46,6 @@ if(isset($_GET['categoria'])){
                 <td><?php echo $filas['Descripcion']?></td>
                 <td><?php echo $filas['Peso']?></td>
                 <td><?php echo $filas['Stock']?></td>
-                <?php echo $filas['Comprar']?>
                 
                 <!-- La variable que lleva el número que ha seleccionado el cliente es 'numero' -->
                 <td>

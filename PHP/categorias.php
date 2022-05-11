@@ -1,8 +1,8 @@
 <?php
 include ('functions.php');
-// Esta función va a abrir una conexión a la base de datos y 
-// te va a devolver la variable donde se guarda la conexión
-// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
+
+// Esta función va a abrir una conexión a la base de datos y te va a devolver la variable donde se guarda la conexión
+
 $conexion = conexion_db();
 ?>
 
@@ -22,10 +22,7 @@ $conexion = conexion_db();
             //Guardamos una varible con la tabla familia
             $query= "SELECT * from categoria";
             
-            // Esta función va a ejecutar una sentencia SQL y se le tiene que 
-            // pasar la sentencia que quieres ejecutar y la conexión a la base
-            // de datos 
-            // Ej: query_db("Sentencia a ejecutar", $conexion)
+            // Esta función va a ejecutar una sentencia SQL y se le tiene que pasar la sentencia que quieres ejecutar y la conexión a la base de datos 
 
             $resultado = query_db($query, $conexion);
             
