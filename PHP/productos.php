@@ -1,7 +1,8 @@
 <?php
 include ('functions.php');
-// Esta función va a abrir una conexión a la base de datos y te va a devolver la variable donde se guarda la conexión
-
+// Esta función va a abrir una conexión a la base de datos y 
+// te va a devolver la variable donde se guarda la conexión
+// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
 $conexion = conexion_db();
 
 if(isset($_GET['categoria'])){
@@ -14,6 +15,10 @@ if(isset($_GET['categoria'])){
         <title>Comida</title>
     </head>
     <body>
+        <header>
+            <p>Usuario: <!-- poner correo del usuario --> <a href='categorias.php'>Home</a> <a href='carrito.php'>Ver carrito</a> <a href='logout.php'>Cerrar sesión</a></p>
+            <hr> 
+        </header>
         <?php
         if ($familia == 1){
             echo '<h1>Comida</h1>';
@@ -31,34 +36,12 @@ if(isset($_GET['categoria'])){
         //Guardamos una varible con la tabla producto
         $query= "SELECT * from productos where CodCat='$familia'";
             
-        // Esta función va a ejecutar una sentencia SQL y se le tiene que pasar la sentencia que quieres ejecutar y la conexión a la base de datos
-        $resultado = query_db($query, $conexion);
-            
+        // Esta función va a ejecutar una sentencia SQL y se le tiene que 
+        // pasar la sentencia que quieres ejecutar y la conexión a la base
+        // de datos 
+        // Ej: query_db("Sentencia a ejecutar", $conexion)
+        $resultado = query_db($query, $conexion);   
+        obtener_pedidos($resultado);
         ?>
-        <table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>
-        <?php
-            //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
-            if($resultado->num_rows > 0){
-                while($filas = $resultado->fetch_array()){
-        ?>
-            <tr>
-                <td><?php echo $filas['Nombre']?></td>
-                <td><?php echo $filas['Descripcion']?></td>
-                <td><?php echo $filas['Peso']?></td>
-                <td><?php echo $filas['Stock']?></td>
-                
-                <!-- La variable que lleva el número que ha seleccionado el cliente es 'numero' -->
-                <td>
-                    <form method='POST' action='añadir.php'>
-                        <input type='number' name='numero'>
-                        <input type='submit' value='Comprar'>
-                    </form>
-                </td> 
-        <?php       
-                }
-            }
-        ?>                    
-            </tr>
-        </table>
     </body>
 </html>
