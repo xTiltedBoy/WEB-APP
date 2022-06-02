@@ -117,7 +117,10 @@ function insertar_pedido($conexion){
     
 }
 
-function obtener_categorias($resultado){
+function obtener_categorias($conexion){
+    
+    $query= "SELECT * from categoria";
+    $resultado = query_db($query, $conexion);
     
     if($resultado->num_rows > 0){
                 while($filas = $resultado->fetch_array()){
@@ -134,7 +137,25 @@ function obtener_categorias($resultado){
             }       
 }
 
-function obtener_pedidos($resultado){
+function obtener_pedidos($conexion){
+    
+    if(isset($_GET['categoria'])){
+        $familia=$_GET['categoria'];
+}  
+    
+    if ($familia == 1){
+            echo '<h1>Comida</h1>';
+            echo '<p>Productos y descripción</p>';
+        } elseif ($familia == 2){
+            echo '<h1>Bebidas sin</h1>';
+            echo '<p>Bebidas y descripción</p>';
+        } elseif ($familia == 3){
+            echo '<h1>Bebidas con</h1>';
+            echo '<p>Bebidas y descripción</p>';
+        }
+    
+    $query= "SELECT * from productos where CodCat='$familia'";
+    $resultado = query_db($query, $conexion); 
     
     echo "<table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>";
 
