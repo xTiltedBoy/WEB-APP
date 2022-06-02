@@ -116,3 +116,60 @@ function insertar_pedido($conexion){
     query_db($query, $conexion);
     
 }
+
+function obtener_categorias($resultado){
+    
+    if($resultado->num_rows > 0){
+                while($filas = $resultado->fetch_array()){
+        
+        echo "<ul>";
+        echo    "<li type='disc'>";
+                  
+                    echo "<a href='productos.php?categoria=".$filas['CodCat']. "'>".$filas['Nombre']."</a><br>";
+            
+        echo    "</li>";
+        echo "</ul>";
+        
+                }
+            }       
+}
+
+function obtener_pedidos($resultado){
+    
+    echo "<table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>";
+
+            //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
+            if($resultado->num_rows > 0){
+                while($filas = $resultado->fetch_array()){
+        
+            echo "<tr>";
+            echo    "<td>";
+                    echo $filas['Nombre'];
+            echo    "</td>";
+            echo    "<td>";
+                    echo $filas['Descripcion'];
+            echo    "</td>";
+            echo    "<td>";
+                    echo $filas['Peso'];
+            echo    "</td>";
+            echo    "<td>";
+                    echo $filas['Stock'];
+            echo    "</td>";
+            
+                echo $filas['Comprar'];
+                
+                //La variable que lleva el número que ha seleccionado el cliente es 'numero'
+                echo "<td>";
+                echo    "<form method='POST' action='añadir.php'>";
+                echo        "<input type='number' name='numero'>";
+                echo        "<input type='submit' value='Comprar'>";
+                echo    "</form>";
+                echo "</td>";
+              
+                }
+            }
+                           
+        echo    "</tr>";
+        echo    "</table>";
+
+}
