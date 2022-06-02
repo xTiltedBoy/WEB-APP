@@ -1,57 +1,64 @@
 <?php
 
-// Esta función va a abrir una conexión a la base de datos y 
-// te va a devolver la variable donde se guarda la conexión
-// Ej: $conexion = conexion_db(IP/Hostname, usuario, contraseña, nombre_db)
+// Esta función va a abrir una conexión a la base de datos y te va a devolver la variable donde se guarda la conexión
+// Ej: $conexion = conexion_db()
 
 function conexion_db(){
-$hostname='localhost';
-$user_db='root'; 
-$password='';
-$name_db='pedidos';
-    $conexion = new mysqli($hostname,$user_db,$password,$name_db);
-    
-    $error = $conexion->errno;
-  
-    if ($error != null){
-        
-        echo "Error $error $conexion->error";
-        
-        exit();
-        
-    }
-    else{
+    $hostname='localhost';
+    $user_db='root'; 
+    $password='';
+    $name_db='pedidos';
+   
+    try{
+     
+        $conexion = new mysqli($hostname,$user_db,$password,$name_db);
         
         return $conexion;
         
+    } catch (Exception $ex) {
+        
+        echo $ex->getMessage()." on line ".$ex->getLine();
+        die();
+        
     }
+    
 }
 
-// Esta función va a ejecutar una sentencia SQL y se le tiene que 
-// pasar la sentencia que quieres ejecutar y la conexión a la base
-// de datos 
-// Ej: query_db("Sentencia a ejecutar", $conexion)
+// Esta función va a ejecutar una sentencia SQL y se le tiene que pasar la sentencia que quieres ejecutar y la conexión a la base de datos 
+// Ej: $resultado = query_db("Sentencia a ejecutar", $conexion)
 
 function query_db($query, $conexion){
     
-    $resultado = $conexion->query($query);
+    // Iniciamos un bloque try para capturar la excepción en caso de que de error
+    // En caso de que no se de ningun error devolvemos el resultado
     
-    $error = $conexion->errno;
-    
-    if ($error != null){
+    try{
         
-        return $error;
-        
-    }
-    else{
+        $resultado = $conexion->query($query);
         
         return $resultado;
+        
+    } 
+    
+    // En caso de que de error se devuelve ERROR
+    
+    catch (Exception $ex) {
+          
+        return "ERROR";
         
     }
     
 }
 
+    // Esta función va a insertar un pedido en la base de datos con los productos que haya en el carrito
+    // Ej: $resultado = insertar_pedido($conexion)
+
 function insertar_pedido($conexion){
+    
+    // Desabilitamos el AUTOCOMMIT de la base de datos
+    
+    $query = "SET AUTOCOMMIT=0";    
+    query_db($query, $conexion);
     
     // Inicializamos las variables
     
@@ -60,11 +67,13 @@ function insertar_pedido($conexion){
 
     // Hacemos una SELECT para ver cual fue el último CodPed y sumarlo en 1
     
-    $SELECT = "SELECT MAX(CodPed) + 1 FROM pedidos";
+    
+    
+    $SELECT = "SELECT * FROM pedidos";
     
     $CodPed = query_db($SELECT, $conexion);
-    $CodPed = $CodPed->fetch_array();
-    $CodPed = $CodPed[0];
+    $CodPed = $CodPed->num_rows;   
+    $CodPed += 1;
     
     // Hacemos un INSERT con el pedido a la tabla pedidos
     
@@ -73,89 +82,37 @@ function insertar_pedido($conexion){
     $INSERT = "INSERT INTO pedidos (CodPed, Fecha, Enviado, Restaurante) VALUES ($CodPed, '$Date', 0, $usuario)";
     query_db($INSERT, $conexion);
     
+    // Hacemos los INSERT con los productos y unidades en la tabla pedidosproductos
+    
     foreach ($carrito as $CodProd => $Unidades){
         
         $INSERT="INSERT INTO pedidosproductos (CodPed, CodProd, Unidades) VALUES ($CodPed, $CodProd, $Unidades)";
         $resultado = query_db($INSERT, $conexion);
-        
-        
-        $contador = 0;
-        
-        if (is_int($resultado) === true){
-            
-            $contador += 1;
-            $codigo_error = $resultado;
-            
-        }
        
     }
     
-    if ($contador > 0){
+    // Si ha dado algun error hacemos un ROLLBACK, si no hacemos un COMMIT
+    
+    if ($resultado === "ERROR"){
         
-        return $codigo_error;
+        $ROLLBACK = "ROLLBACK";
+        query_db($ROLLBACK, $conexion);
+        
+        return false;
         
     }
     else{
         
-        return true;
+        $COMMIT = "COMMIT";
+        query_db($COMMIT, $conexion);
+        
+        return $CodPed;
         
     }
     
-}
-
-function obtener_categorias($resultado){
+    // Volvemos a poner el AUTOCOMMIT
     
-    if($resultado->num_rows > 0){
-                while($filas = $resultado->fetch_array()){
-        
-        echo "<ul>";
-        echo    "<li type='disc'>";
-                  
-                    echo "<a href='productos.php?categoria=".$filas['CodCat']. "'>".$filas['Nombre']."</a><br>";
-            
-        echo    "</li>";
-        echo "</ul>";
-        
-                }
-            }       
-}
-
-function obtener_pedidos($resultado){
+    $query = "SET AUTOCOMMIT=1";    
+    query_db($query, $conexion);
     
-    echo "<table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>";
-
-            //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
-            if($resultado->num_rows > 0){
-                while($filas = $resultado->fetch_array()){
-        
-            echo "<tr>";
-            echo    "<td>";
-                    echo $filas['Nombre'];
-            echo    "</td>";
-            echo    "<td>";
-                    echo $filas['Descripcion'];
-            echo    "</td>";
-            echo    "<td>";
-                    echo $filas['Peso'];
-            echo    "</td>";
-            echo    "<td>";
-                    echo $filas['Stock'];
-            echo    "</td>";
-            
-                echo $filas['Comprar'];
-                
-                //La variable que lleva el número que ha seleccionado el cliente es 'numero'
-                echo "<td>";
-                echo    "<form method='POST' action='añadir.php'>";
-                echo        "<input type='number' name='numero'>";
-                echo        "<input type='submit' value='Comprar'>";
-                echo    "</form>";
-                echo "</td>";
-              
-                }
-            }
-                           
-        echo    "</tr>";
-        echo    "</table>";
-
 }
