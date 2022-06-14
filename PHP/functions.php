@@ -210,6 +210,7 @@ function comprobar_usuario($correo, $clave){
     
     if($resultado == 1) {
        header('location: categorias.php');
+       session_start();
     }
     else {
        echo "Usuario no existe"; 
