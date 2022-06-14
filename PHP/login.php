@@ -5,7 +5,6 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     $clave = $_POST['clave'];
     comprobar_usuario($correo, $clave);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -20,11 +19,9 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         <form action=<?php echo $_SERVER['PHP_SELF'] ?> method="post">
         
         <h3>Usuario:</h3>
-        
         <input type="text" id="correo" name="correo"><br>
         
         <h3>Contraseña:</h3>
-        
         <input type="password" id="clave" name="clave"><br><br>
         
         <input type="submit" name="enviar" value="Enviar">
