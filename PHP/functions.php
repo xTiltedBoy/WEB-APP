@@ -194,3 +194,24 @@ function obtener_pedidos($conexion){
         echo    "</table>";
 
 }
+
+function comprobar_usuario($correo, $clave){    
+    if($correo == ''){
+        echo "Error introduzca el correo.<br>";       
+    }
+    if($clave == ''){
+        echo "Error introduzca la contraseña.<br>";
+    }
+    
+    $conexion = conexion_db();
+    $query = "SELECT * FROM restaurantes WHERE Correo = '".$correo."' AND Clave = '".$clave."'";
+    $resultado = query_db($query, $conexion);
+    $resultado = $resultado->num_rows;
+    
+    if($resultado == 1) {
+       header('location: categorias.php');
+    }
+    else {
+       echo "Usuario no existe"; 
+    }
+}
