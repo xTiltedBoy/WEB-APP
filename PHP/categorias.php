@@ -1,5 +1,6 @@
 <?php
 include ('functions.php');
+//comprobar_session();
 $conexion = conexion_db();
 ?>
 <!DOCTYPE html>
@@ -12,7 +13,21 @@ $conexion = conexion_db();
             <h1>Lista de categorías</h1>
         </header>
         <?php
-        obtener_categorias($conexion);
+        $categorias = obtener_categorias($conexion);
+        print_r($categorias);
+        echo "<ul>";
+        
+        $cont = 0;
+        while ($cont < count($categorias)) {
+        
+        echo    "<li type='disc'>";
+                        
+                echo "<a href='productos.php?categoria=".$categorias[$cont][0]. "'>".$categorias[$cont][1]."</a><br>";
+            
+        echo    "</li>";
+        $cont+=1;
+        }
+        echo "</ul>";
         ?>           
     </body>
 </html>
