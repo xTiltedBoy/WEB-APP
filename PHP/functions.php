@@ -27,7 +27,22 @@ function conexion_db(){
 // Esta función va a ejecutar una sentencia SQL y se le tiene que pasar la sentencia que quieres ejecutar y la conexión a la base de datos 
 // Ej: $resultado = query_db("Sentencia a ejecutar", $conexion)
 
-function query_db($query, $conexion){
+function ejecuta_consulta($query){
+    $hostname='localhost';
+    $user_db='root'; 
+    $password='';
+    $name_db='pedidos';
+   
+    try{
+     
+        $conexion = new mysqli($hostname,$user_db,$password,$name_db);
+
+    } catch (Exception $ex) {
+        
+        echo $ex->getMessage()." on line ".$ex->getLine();
+        die();
+        
+    }
     
     // Iniciamos un bloque try para capturar la excepción en caso de que de error
     // En caso de que no se de ningun error devolvemos el resultado
@@ -53,12 +68,12 @@ function query_db($query, $conexion){
     // Esta función va a insertar un pedido en la base de datos con los productos que haya en el carrito
     // Ej: $resultado = insertar_pedido($conexion)
 
-function insertar_pedido($conexion){
+function insertar_pedido(){
     
     // Desabilitamos el AUTOCOMMIT de la base de datos
     
     $query = "SET AUTOCOMMIT=0";    
-    query_db($query, $conexion);
+    ejecuta_consulta($query);
     
     // Inicializamos las variables
     
@@ -71,7 +86,7 @@ function insertar_pedido($conexion){
     
     $SELECT = "SELECT * FROM pedidos";
     
-    $CodPed = query_db($SELECT, $conexion);
+    $CodPed = ejecuta_consulta($SELECT);
     $CodPed = $CodPed->num_rows;   
     $CodPed += 1;
     
@@ -80,14 +95,14 @@ function insertar_pedido($conexion){
     $Date = date("Y-m-d H:i:s");
     
     $INSERT = "INSERT INTO pedidos (CodPed, Fecha, Enviado, Restaurante) VALUES ($CodPed, '$Date', 0, $usuario)";
-    query_db($INSERT, $conexion);
+    ejecuta_consulta($INSERT);
     
     // Hacemos los INSERT con los productos y unidades en la tabla pedidosproductos
     
     foreach ($carrito as $CodProd => $Unidades){
         
         $INSERT="INSERT INTO pedidosproductos (CodPed, CodProd, Unidades) VALUES ($CodPed, $CodProd, $Unidades)";
-        $resultado = query_db($INSERT, $conexion);
+        $resultado = ejecuta_consulta($INSERT);
        
     }
     
@@ -96,7 +111,7 @@ function insertar_pedido($conexion){
     if ($resultado === "ERROR"){
         
         $ROLLBACK = "ROLLBACK";
-        query_db($ROLLBACK, $conexion);
+        ejecuta_consulta($ROLLBACK);
         
         return false;
         
@@ -104,7 +119,7 @@ function insertar_pedido($conexion){
     else{
         
         $COMMIT = "COMMIT";
-        query_db($COMMIT, $conexion);
+        ejecuta_consulta($COMMITn);
         
         return $CodPed;
         
@@ -113,106 +128,61 @@ function insertar_pedido($conexion){
     // Volvemos a poner el AUTOCOMMIT
     
     $query = "SET AUTOCOMMIT=1";    
-    query_db($query, $conexion);
+    ejecuta_consulta($query);
     
 }
 
-function obtener_categorias($conexion){
-    
+function obtener_categorias(){    
     $query= "SELECT * from categoria";
-    $resultado = query_db($query, $conexion);
+    $resultado = ejecuta_consulta($query);
     
+    if($resultado->num_rows > 0){               
+        $categorias = $resultado->fetch_all();
+    }
+    return $categorias;
+}
+
+function obtener_productos($codigo){
+    $query= "SELECT * from productos where CodCat='$codigo'";
+    $resultado = ejecuta_consulta($query);
+    
+    //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
     if($resultado->num_rows > 0){
-                while($filas = $resultado->fetch_array()){
-        
-        echo "<ul>";
-        echo    "<li type='disc'>";
-                  
-                    echo "<a href='productos.php?categoria=".$filas['CodCat']. "'>".$filas['Nombre']."</a><br>";
-            
-        echo    "</li>";
-        echo "</ul>";
-        
-                }
-            }       
+        $productos = $resultado->fetch_all();
+    }
+    return $productos;           
 }
 
-function obtener_pedidos($conexion){
+function comprobar_usuario($correo, $clave){
+    session_start();
     
-    if(isset($_GET['categoria'])){
-        $familia=$_GET['categoria'];
-}  
-    
-    if ($familia == 1){
-            echo '<h1>Comida</h1>';
-            echo '<p>Productos y descripción</p>';
-        } elseif ($familia == 2){
-            echo '<h1>Bebidas sin</h1>';
-            echo '<p>Bebidas y descripción</p>';
-        } elseif ($familia == 3){
-            echo '<h1>Bebidas con</h1>';
-            echo '<p>Bebidas y descripción</p>';
-        }
-    
-    $query= "SELECT * from productos where CodCat='$familia'";
-    $resultado = query_db($query, $conexion); 
-    
-    echo "<table><tr><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>Comprar</th></tr>";
-
-            //Si el número de filas es mayor que cero, hace un bucle que muestre el nombre de la tabla
-            if($resultado->num_rows > 0){
-                while($filas = $resultado->fetch_array()){
-        
-            echo "<tr>";
-            echo    "<td>";
-                    echo $filas['Nombre'];
-            echo    "</td>";
-            echo    "<td>";
-                    echo $filas['Descripcion'];
-            echo    "</td>";
-            echo    "<td>";
-                    echo $filas['Peso'];
-            echo    "</td>";
-            echo    "<td>";
-                    echo $filas['Stock'];
-            echo    "</td>";
-            
-                echo $filas['Comprar'];
-                
-                //La variable que lleva el número que ha seleccionado el cliente es 'numero'
-                echo "<td>";
-                echo    "<form method='POST' action='añadir.php'>";
-                echo        "<input type='number' name='numero'>";
-                echo        "<input type='submit' value='Comprar'>";
-                echo    "</form>";
-                echo "</td>";
-              
-                }
-            }
-                           
-        echo    "</tr>";
-        echo    "</table>";
-
-}
-
-function comprobar_usuario($correo, $clave){    
     if($correo == ''){
         echo "Error introduzca el correo.<br>";       
     }
     if($clave == ''){
         echo "Error introduzca la contraseña.<br>";
     }
-    
-    $conexion = conexion_db();
+
     $query = "SELECT * FROM restaurantes WHERE Correo = '".$correo."' AND Clave = '".$clave."'";
-    $resultado = query_db($query, $conexion);
+    $resultado = ejecuta_consulta($query);
     $resultado = $resultado->num_rows;
     
-    if($resultado == 1) {
+    if($resultado == 1){
+       $_SESSION['correo'] = $correo;
        header('location: categorias.php');
-       session_start();
     }
-    else {
-       echo "Usuario no existe"; 
+    else{
+       echo "Usuario no existe";
+       session_destroy();
+    }
+}
+
+function comprobar_sesion(){
+    session_start();
+    
+    $varsesion = $_SESSION['correo'];
+    
+    if($varsesion == null || $varsesion == "") {
+        header("location: login.php");
     }
 }

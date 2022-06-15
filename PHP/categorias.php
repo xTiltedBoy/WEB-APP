@@ -1,7 +1,6 @@
 <?php
 include ('functions.php');
-//comprobar_session();
-$conexion = conexion_db();
+comprobar_sesion();
 ?>
 <!DOCTYPE html>
 <html><meta charset="UTF-8">
@@ -13,10 +12,9 @@ $conexion = conexion_db();
             <h1>Lista de categorías</h1>
         </header>
         <?php
-        $categorias = obtener_categorias($conexion);
-        print_r($categorias);
-        echo "<ul>";
+        $categorias = obtener_categorias();
         
+        echo "<ul>";
         $cont = 0;
         while ($cont < count($categorias)) {
         
