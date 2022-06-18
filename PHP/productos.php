@@ -46,8 +46,6 @@ comprobar_sesion();
                 echo    "<td>";
                     echo $productos[$cont][4];
                 echo    "</td>";
-            
-                echo $productos['Comprar'];
                 
                 //La variable que lleva el número que ha seleccionado el cliente es 'numero'
                 echo "<td>";
