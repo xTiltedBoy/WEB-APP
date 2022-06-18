@@ -3,6 +3,7 @@ include ('functions.php');
 if($_SERVER['REQUEST_METHOD'] === "POST"){   
     $correo = $_POST['correo'];
     $clave = $_POST['clave'];
+    $clave = md5($clave);
     comprobar_usuario($correo, $clave);
 }
 ?>
