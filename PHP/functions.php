@@ -75,14 +75,14 @@ function insertar_pedido(){
     $query = "SET AUTOCOMMIT=0";    
     ejecuta_consulta($query);
     
+    comprobar_sesion();
+    
     // Inicializamos las variables
     
-    $usuario = $_SESSION['usuario'];
+    $correo = $_SESSION['correo'];
     $carrito = $_SESSION['carrito'];
 
     // Hacemos una SELECT para ver cual fue el último CodPed y sumarlo en 1
-    
-    
     
     $SELECT = "SELECT * FROM pedidos";
     
@@ -94,12 +94,14 @@ function insertar_pedido(){
     
     $Date = date("Y-m-d H:i:s");
     
-    $INSERT = "INSERT INTO pedidos (CodPed, Fecha, Enviado, Restaurante) VALUES ($CodPed, '$Date', 0, $usuario)";
+    $INSERT = "INSERT INTO pedidos (CodPed, Fecha, Enviado, Restaurante) VALUES ($CodPed, '$Date', 0, '1')";
     ejecuta_consulta($INSERT);
     
     // Hacemos los INSERT con los productos y unidades en la tabla pedidosproductos
     
-    foreach ($carrito as $CodProd => $Unidades){
+    foreach ($carrito as $CodProd => $value){
+        
+        $Unidades = $carrito[$CodProd]['unidades'];
         
         $INSERT="INSERT INTO pedidosproductos (CodPed, CodProd, Unidades) VALUES ($CodPed, $CodProd, $Unidades)";
         $resultado = ejecuta_consulta($INSERT);
@@ -119,7 +121,7 @@ function insertar_pedido(){
     else{
         
         $COMMIT = "COMMIT";
-        ejecuta_consulta($COMMITn);
+        ejecuta_consulta($COMMIT);
         
         return $CodPed;
         
@@ -156,25 +158,26 @@ function obtener_productos($codigo){
 function comprobar_usuario($correo, $clave){
     session_start();
     
-    if($correo == ''){
-        echo "Error introduzca el correo.<br>";       
-    }
-    if($clave == ''){
-        echo "Error introduzca la contraseña.<br>";
-    }
-
-    $query = "SELECT * FROM restaurantes WHERE Correo = '".$correo."' AND Clave = '".$clave."'";
-    $resultado = ejecuta_consulta($query);
-    $resultado = $resultado->num_rows;
-    
-    if($resultado == 1){
-       $_SESSION['correo'] = $correo;
-       header('location: categorias.php');
+    if($correo == '' || $clave == ''){
+        return "PARAMETROS";
     }
     else{
-       echo "Usuario no existe";
-       session_destroy();
-    }
+        $query = "SELECT * FROM restaurantes WHERE Correo = '".$correo."' AND Clave = '".$clave."'";
+        $resultado = ejecuta_consulta($query);
+        $codRes = $resultado->fetch_array();
+        $resultado = $resultado->num_rows;
+
+        if($resultado == 1){
+           $_SESSION['correo'] = $correo;
+           $_SESSION['codres'] = $codRes[0];
+           $_SESSION['carrito'] = array();
+           header('location: categorias.php');
+        }
+        else{
+           session_destroy();
+           return "USUARIO";
+        }
+    }    
 }
 
 function comprobar_sesion(){

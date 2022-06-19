@@ -13,7 +13,7 @@ comprobar_sesion();
     </head>
     <body>
         <header>
-            <p>Usuario: <!-- poner correo del usuario --> <a href='categorias.php'>Home</a> <a href='carrito.php'>Ver carrito</a> <a href='logout.php'>Cerrar sesión</a></p><hr>
+            <p>Usuario: <?php echo $_SESSION['correo'] ?> <a href='categorias.php'>Home</a> <a href='carrito.php'>Ver carrito</a> <a href='logout.php'>Cerrar sesión</a></p><hr>
         </header>
         <?php        
         if ($codigo == 1){
@@ -49,8 +49,14 @@ comprobar_sesion();
                 
                 //La variable que lleva el número que ha seleccionado el cliente es 'numero'
                 echo "<td>";
-                echo    "<form method='POST' action='añadir.php'>";
-                echo        "<input type='number' name='numero'>";
+                echo    "<form method='POST' action='anadir.php'>";
+                echo        "<input type='hidden' name='codigo' value='".$productos[$cont][0]."'>";
+                echo        "<input type='hidden' name='nombre' value='".$productos[$cont][1]."'>";
+                echo        "<input type='hidden' name='desc' value='".$productos[$cont][2]."'>";
+                echo        "<input type='hidden' name='peso' value='".$productos[$cont][3]."'>";
+                echo        "<input type='hidden' name='stock' value='".$productos[$cont][4]."'>";
+                echo        "<input type='hidden' name='codigoCat' value='".$codigo."'>";
+                echo        "<input type='number' name='unidades' value='1'>";
                 echo        "<input type='submit' value='Comprar'>";
                 echo    "</form>";
                 echo "</td>";                   
@@ -58,6 +64,8 @@ comprobar_sesion();
         $cont+=1;
         }
         echo    "</table>";
+        
+        print_r($_SESSION);
         
         ?>
     </body>

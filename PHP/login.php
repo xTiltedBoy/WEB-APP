@@ -2,9 +2,7 @@
 include ('functions.php');
 if($_SERVER['REQUEST_METHOD'] === "POST"){   
     $correo = $_POST['correo'];
-    $clave = $_POST['clave'];
-    $clave = md5($clave);
-    comprobar_usuario($correo, $clave);
+    $clave = md5($_POST['clave']);
 }
 ?>
 
@@ -18,6 +16,22 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     <body>
         <h1>Login</h1>
         <form action=<?php echo $_SERVER['PHP_SELF'] ?> method="post">
+            
+        <?php 
+        
+        if($_SERVER['REQUEST_METHOD'] === "POST"){  
+            
+            $resultado = comprobar_usuario($correo, $clave);
+
+            if ($resultado === "PARAMETROS"){
+                echo "<label class='aviso'>Introduce el Usuario y la Clave</label>";
+            }    
+            elseif ($resultado === "USUARIO"){
+                echo "<label class='aviso'>Usuario o Clave no validos</label>";
+            }
+        }
+        
+        ?>
         
         <h3>Usuario:</h3>
         
