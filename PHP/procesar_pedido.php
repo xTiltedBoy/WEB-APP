@@ -2,9 +2,7 @@
 
 include "functions.php";
 
-$conexion = conexion_db();
-
-$resultado = insertar_pedido($conexion);
+$resultado = insertar_pedido();
 
 if ($resultado === false){
     

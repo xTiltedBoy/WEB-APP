@@ -3,6 +3,7 @@ include ('functions.php');
 if($_SERVER['REQUEST_METHOD'] === "POST"){   
     $correo = $_POST['correo'];
     $clave = md5($_POST['clave']);
+    $resultado = comprobar_usuario($correo, $clave);
 }
 ?>
 
@@ -20,8 +21,6 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         <?php 
         
         if($_SERVER['REQUEST_METHOD'] === "POST"){  
-            
-            $resultado = comprobar_usuario($correo, $clave);
 
             if ($resultado === "PARAMETROS"){
                 echo "<label class='aviso'>Introduce el Usuario y la Clave</label>";
